@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body{
+    background-image: url("/src/assets/chessWalnutBg.jpg");
+    background-size: cover;
+    background-position : center;
+  }
+  
+  #main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    max-width: 77vh;
+    /* max-height: 70vw; */
+    /* background-image: url("/src/assets/chessBg.jpeg");
+    background-size: cover;
+    background-position : center; */
+  }
+
+
+#button {
+    background-color: #4fbe8c;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px;
+    margin: 8px;
+    min-height: 9px;
+    min-width: 157px;
+}
