@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, db } from './firebase';
-import PieceSelection from './PieceSelection';
-import "./App.css"
+import { auth, db } from '../firebase';
+import PieceSelection from '../component/PieceSelection';
+import "../App.css"
 
 function Homepage() {
   const navigate = useNavigate();

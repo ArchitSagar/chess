@@ -1,7 +1,7 @@
 // UserForm.jsx
 
 import React, { useState } from 'react';
-import { auth } from './firebase';
+import { auth } from '../firebase';
 
 export default function UserForm({ onSignIn }) {
   const [name, setName] = useState('');

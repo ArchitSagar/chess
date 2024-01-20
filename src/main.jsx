@@ -9,11 +9,11 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import HumanVsComputer from './HumanVsComputer';
-import Homepage from './Homepage';
-import HumanVsRandom from './HumanVsRandom';
-import Multiplayer from './Multiplayer.jsx';
-import PlayLocally from './PlayLocally.jsx';
+import HumanVsComputer from './pages/HumanVsComputer.jsx';
+import Homepage from './pages/Homepage.jsx';
+import HumanVsRandom from './pages/HumanVsRandom.jsx';
+import Multiplayer from './pages/Multiplayer.jsx';
+import PlayLocally from './pages/PlayLocally.jsx';
 
 
 const router = createBrowserRouter(

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useParams } from 'react-router-dom';
-import { auth, db } from './firebase';
+import { auth, db } from '../firebase';
 
 function Multiplayer() {
   const { gameId } = useParams();

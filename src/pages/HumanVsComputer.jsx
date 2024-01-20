@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useParams } from 'react-router-dom';
-import Engine from "./engine.ts";
+import Engine from "../engine.ts";
 
 function HumanVsComputer() {
   const { Piece } = useParams();

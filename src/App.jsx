@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import UserForm from './UserForm';
+import UserForm from './component/UserForm';
 import { Outlet } from 'react-router-dom';
 
 export default function App() {
