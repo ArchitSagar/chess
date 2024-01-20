@@ -9,22 +9,40 @@ function Multiplayer() {
   const [game, setGame] = useState(new Chess());
   const [boardOrientation, setBoardOrientation] = useState('white');
   const [currentUserPiece, setCurrentUserPiece] = useState(null);
-  const [isGameOver, setIsGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
   const [isGameOverVisible, setIsGameOverVisible] = useState(false);
-  const [currentUserUid, setCurrentUserUid] = useState('');
+  const [boardWrapperStyle, setBoardWrapperStyle] = useState({
+    width: '80vw',
+    maxWidth: '80vh',
+    margin: '1rem auto',
+  });
+
+
+  useEffect(() => {
+    function handleResize() {
+      const isSmallScreen = window.innerWidth <= 576;
+      setBoardWrapperStyle({
+        width: isSmallScreen ? '92vw' : '75vw',
+        maxWidth: isSmallScreen ? '93vh' : '80vh',
+        margin: '1rem auto',
+      });
+    }
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
       const fetchGameData = async () => {
         if (!user) {
-          console.error('User is not signed in. Please handle this case accordingly.');
-          // Redirect the user to the sign-in page or take appropriate action
           return;
         }
-        console.log('User is signed in:', user.uid); // Log the user's UID
-
-        setCurrentUserUid(user.uid);
 
         const snapshot = await db.collection('games').doc(gameId).get();
 
@@ -37,12 +55,10 @@ function Multiplayer() {
           const currentMember = gameData.members.find((member) => member.uid === user.uid);
 
           if (!currentMember) {
-            // If the user is not already a member, add them as a member
             const newMember = {
               uid: user.uid,
               name: localStorage.getItem('userName'),
               piece: gameData.members[0].piece === 'white' ? 'black' : 'white',
-              // Additional member data if needed
             };
 
             await db.collection('games').doc(gameId).update({
@@ -53,16 +69,12 @@ function Multiplayer() {
 
             const orientation = newMember?.piece === 'white' ? 'white' : 'black';
             setBoardOrientation(orientation);
-
-            console.log('User added as a member');
           } else {
             setCurrentUserPiece(currentMember.piece || null);
 
             const orientation = currentMember?.piece === 'white' ? 'white' : 'black';
             setBoardOrientation(orientation);
           }
-        } else {
-          console.error(`Document with ID ${gameId} does not exist.`);
         }
       };
 
@@ -75,18 +87,12 @@ function Multiplayer() {
         const fen = gameData.fen;
         setGame(new Chess(fen));
 
-        // Check if the game is over
         if (gameData.isGameOver) {
-          setIsGameOver(true);
           setWinner(gameData.winner);
-          setIsGameOverVisible(true); // Set the visibility state
+          setIsGameOverVisible(true);
         } else {
-          setIsGameOver(false);
-          setWinner(null);
-          setIsGameOverVisible(false); // Reset the visibility state
+          setIsGameOverVisible(false);
         }
-      } else {
-        console.error(`Document with ID ${gameId} does not exist.`);
       }
     });
 
@@ -97,58 +103,39 @@ function Multiplayer() {
   }, [gameId, currentUserPiece, boardOrientation]);
 
   function onDrop(source, target, piece) {
-    // Check if the move is valid
     const move = game.move({ from: source, to: target, promotion: piece[1].toLowerCase() ?? 'q' });
 
     if (move === null) {
-      console.log('Invalid move');
-      return 'snapback'; // Snap back the dragged piece if the move is invalid
+      return 'snapback';
     }
 
-    // Check if the piece being moved belongs to the current user
     const isCurrentUserPiece =
       (currentUserPiece === 'white' && game.get(target)?.color === 'w') ||
       (currentUserPiece === 'black' && game.get(target)?.color === 'b');
 
-    console.log('currentUserPiece:', currentUserPiece);
-    console.log('Piece color on target square:', game.get(target)?.color);
-
     if (!isCurrentUserPiece) {
-      console.log('You can only move your own pieces!');
-      return 'snapback'; // Snap back the dragged piece if it doesn't belong to the current user
+      return 'snapback';
     }
 
-    // Update the Firebase document with the new FEN
     const updatedFen = game.fen();
     db.collection('games')
       .doc(gameId)
-      .update({ fen: updatedFen,})
+      .update({ fen: updatedFen })
       .then(() => console.log('Update successful'))
       .catch((error) => console.error('Error updating game data:', error));
 
-    // Set the new game state
     setGame(new Chess(updatedFen));
 
     checkGameOver();
 
-    console.log('Calling checkGameOver...');
     return true;
   }
 
   function checkGameOver() {
-    console.log('Checking game over...');
-    console.log('Is game over:', game.game_over());
-    console.log('Is draw:', game.in_draw());
-    console.log('Is stalemate:', game.in_stalemate());
-    console.log('Is threefold repetition:', game.in_threefold_repetition());
-
     if (game.game_over() || game.in_draw() || game.in_stalemate() || game.in_threefold_repetition()) {
-      console.log('Game over!');
-      setIsGameOver(true);
       setWinner(game.in_draw() ? 'Draw' : game.turn() === 'w' ? 'Black' : 'White');
-      setIsGameOverVisible(true); // Set the visibility state
-      
-      
+      setIsGameOverVisible(true);
+
       const updatedFen = game.fen();
       db.collection('games')
         .doc(gameId)
@@ -159,13 +146,10 @@ function Multiplayer() {
   }
 
   function handleNewGame() {
-    // Reset the game state
     setGame(new Chess());
-    setIsGameOver(false);
     setWinner(null);
-    setIsGameOverVisible(false); // Reset the visibility state
+    setIsGameOverVisible(false);
 
-    // Update the Firebase document to start a new game
     db.collection('games')
       .doc(gameId)
       .update({ fen: new Chess().fen(), isGameOver: false, winner: null, status: 'waiting' })
@@ -174,8 +158,10 @@ function Multiplayer() {
   }
 
   return (
-    <div style={{ margin: '3rem auto', maxWidth: '80vh', width: '80vw' }}>
-      <Chessboard
+    <div className="flex items-center justify-center h-screen">
+      <div className="p-4 overflow-hidden max-w-screen-lg w-full">
+        <div className="flex justify-center" style={boardWrapperStyle}>
+        <Chessboard
         id="MultiplayerChessboard"
         position={game.fen()}
         boardOrientation={boardOrientation}
@@ -186,6 +172,9 @@ function Multiplayer() {
           showGhost: true,
         }}
       />
+
+        </div>
+      
 
       {isGameOverVisible && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 border-2 border-black shadow-lg z-50">
@@ -199,6 +188,7 @@ function Multiplayer() {
           </button>
         </div>
       )}
+    </div>
     </div>
   );
 }
