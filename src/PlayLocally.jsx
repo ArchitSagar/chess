@@ -1,24 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
-import { useParams } from 'react-router-dom';
 
-function HumanVsRandom() {
-  const { Piece } = useParams();
+function PlayLocally() {
   const [game, setGame] = useState(new Chess());
-  const [currentTimeout, setCurrentTimeout] = useState(null);
+  const [isWhiteTurn, setIsWhiteTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
-
-  useEffect(() => {
-    
-    return () => {
-        if(Piece === 'black'){
-            makeRandomMove();
-          }
-    }
-  }, [Piece])
-  
 
   // Let's perform a function on the game state
   function safeGameMutate(modify) {
@@ -29,23 +17,7 @@ function HumanVsRandom() {
     });
   }
 
-  // Movement of computer
-  function makeRandomMove() {
-    const possibleMove = game.moves();
-    
-    // Select random move
-    const randomIndex = Math.floor(Math.random() * possibleMove.length);
-
-    // Play random move
-    safeGameMutate((game) => {
-      game.move(possibleMove[randomIndex]);
-    });
-
-    // Check if the game is over after the computer's move
-    checkGameOver();
-  }
-
-  // Perform an action when a piece is dropped by a user
+  // Perform an action when a piece is dropped by a player
   function onDrop(source, target, piece) {
     let move = null;
     safeGameMutate((game) => {
@@ -59,18 +31,18 @@ function HumanVsRandom() {
     // Illegal move
     if (move == null) return false;
 
-    
+    // Valid move
+    setIsWhiteTurn(!isWhiteTurn);
+
+    // Check if the game is over after the player's move
     checkGameOver();
-    clearTimeout(currentTimeout);
-    setCurrentTimeout(setTimeout(makeRandomMove, 200));
-   
 
     return true;
   }
 
   // Check if the game is over
   function checkGameOver() {
-    if (game.game_over() || game.in_draw()) {
+    if (game.game_over() || game.in_draw() || game.in_stalemate() || game.in_threefold_repetition()) {
       setIsGameOver(true);
       setWinner(game.in_draw() ? 'Draw' : game.turn() === 'w' ? 'Black' : 'White');
     }
@@ -83,21 +55,16 @@ function HumanVsRandom() {
     safeGameMutate((game) => {
       game.reset();
     });
-
-    // Start with a random move if the computer plays white
-    if (Piece === 'black') {
-        console.log("newgame")
-      makeRandomMove();
-    }
+    setIsWhiteTurn(true);
   }
 
   return (
     <div style={{ margin: '3rem auto', maxWidth: '80vh', width: '80vw' }}>
       <Chessboard
-        id="PlayVsRandom"
+        id="PlayVsHuman"
         position={game.fen()}
-        boardOrientation={Piece === 'black' ? 'black' : 'white'}
         onPieceDrop={onDrop}
+        boardOrientation={isWhiteTurn ? 'white' : 'black'}
         customBoardStyle={{
           borderRadius: '4px',
           boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
@@ -125,7 +92,8 @@ function HumanVsRandom() {
             safeGameMutate((game) => {
               game.undo();
             });
-            clearTimeout(currentTimeout);
+            setIsWhiteTurn(!isWhiteTurn);
+            checkGameOver(); // Check if the game is over after undo
           }}
         >
           Undo
@@ -135,4 +103,4 @@ function HumanVsRandom() {
   );
 }
 
-export default HumanVsRandom;
+export default PlayLocally;

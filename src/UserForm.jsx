@@ -1,10 +1,10 @@
+// UserForm.jsx
+
 import React, { useState } from 'react';
 import { auth } from './firebase';
-import { useNavigate } from 'react-router-dom';
 
-export default function UserForm() {
+export default function UserForm({ onSignIn }) {
   const [name, setName] = useState('');
-  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -13,18 +13,11 @@ export default function UserForm() {
       // Wait for signInAnonymously to complete
       await auth.signInAnonymously();
 
-      // If successful, set user name in local storage
+      // If successful, set user name in local storage and notify the parent component
       localStorage.setItem('userName', name);
 
-      console.log('Signed in anonymously');
-      console.log('Before navigation');
-
-      // Navigate to the desired page
-    //   navigate('/HumanVsComputer');
-    window.location.href = '/HumanVsComputer';
-
-
-      console.log('After navigation');
+      // Notify the parent component about the sign-in
+      onSignIn(name);
     } catch (error) {
       console.error('Error signing in anonymously:', error);
       // Handle the error if signInAnonymously fails

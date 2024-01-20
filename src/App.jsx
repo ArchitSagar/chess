@@ -1,16 +1,27 @@
-// import './App.css';
-import React from 'react'
-import { Outlet } from "react-router-dom";
-import UserForm from './UserForm'
+// App.jsx
 
+import React, { useState } from 'react';
+import UserForm from './UserForm';
+import { Outlet } from 'react-router-dom';
 
 export default function App() {
-  const user = localStorage.getItem('userName');
+  const [user, setUser] = useState(localStorage.getItem('userName'));
+
+  const handleSignIn = (userName) => {
+    // Set user name in local storage
+    localStorage.setItem('userName', userName);
+
+    // Set the user state
+    setUser(userName);
+  };
 
   return (
     <div>
-      {!user ? <UserForm /> : <Outlet />}
+      {!user ? (
+        <UserForm onSignIn={handleSignIn} />
+      ) : (
+        <Outlet />
+      )}
     </div>
   );
 }
-
