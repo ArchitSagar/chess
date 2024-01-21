@@ -1,15 +1,14 @@
-
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 
 const config = {
-    apiKey: "AIzaSyCjE8o7nLIh9cdxmPcDOI2KD0-ZNZBDgw0",
-    authDomain: "react-chess-52a06.firebaseapp.com",
-    projectId: "react-chess-52a06",
-    storageBucket: "react-chess-52a06.appspot.com",
-    messagingSenderId: "929699770888",
-    appId: "1:929699770888:web:bb4431a1033121d41d57bd"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 if (!firebase.apps.length) {
