@@ -1,36 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Chessboard } from 'react-chessboard';
+import React, { useState } from 'react';
 import { Chess } from 'chess.js';
+import GameOverModal from '../component/GameOverModal';
+import ChessBoard from '../component/ChessBoard';
 
 function PlayLocally() {
   const [game, setGame] = useState(new Chess());
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
-  const [boardWrapperStyle, setBoardWrapperStyle] = useState({
-    width: '80vw',
-    maxWidth: '80vh',
-    margin: '1rem auto',
-  });
-
-  useEffect(() => {
-    function handleResize() {
-      const isSmallScreen = window.innerWidth <= 576;
-      setBoardWrapperStyle({
-        width: isSmallScreen ? '92vw' : '75vw',
-        maxWidth: isSmallScreen ? '93vh' : '80vh',
-        margin: '1rem auto',
-      });
-    }
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   function safeGameMutate(modify) {
     setGame((g) => {
@@ -77,29 +54,10 @@ function PlayLocally() {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="p-4 overflow-hidden max-w-screen-lg w-full">
-        <div className="flex justify-center" style={boardWrapperStyle}>
-          <Chessboard
-            id="PlayVsHuman"
-            position={game.fen()}
-            onPieceDrop={onDrop}
-            boardOrientation={isWhiteTurn ? 'white' : 'black'}
-            customBoardStyle={{
-              borderRadius: '4px',
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
-            }}
-          />
-        </div>
+      <ChessBoard game={game} isWhiteTurn={isWhiteTurn} onDrop={onDrop} />
+
         {isGameOver && (
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 border-2 border-black shadow-lg z-50">
-            <p className="mb-4 text-2xl font-bold">Game Over!</p>
-            <p className="mb-4">Winner: {winner}</p>
-            <button
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              onClick={() => handleNewGame()}
-            >
-              New Game
-            </button>
-          </div>
+          <GameOverModal winner={winner} handleNewGame={handleNewGame} />
         )}
         <div className="flex justify-center mt-4 space-x-4">
           <button

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useParams } from 'react-router-dom';
 import { auth, db } from '../firebase';
+import GameOverModal from '../component/GameOverModal';
+import ChessBoard from '../component/ChessBoard';
 
 function Multiplayer() {
   const { gameId } = useParams();
@@ -11,31 +12,7 @@ function Multiplayer() {
   const [currentUserPiece, setCurrentUserPiece] = useState(null);
   const [winner, setWinner] = useState(null);
   const [isGameOverVisible, setIsGameOverVisible] = useState(false);
-  const [boardWrapperStyle, setBoardWrapperStyle] = useState({
-    width: '80vw',
-    maxWidth: '80vh',
-    margin: '1rem auto',
-  });
 
-
-  useEffect(() => {
-    function handleResize() {
-      const isSmallScreen = window.innerWidth <= 576;
-      setBoardWrapperStyle({
-        width: isSmallScreen ? '92vw' : '75vw',
-        maxWidth: isSmallScreen ? '93vh' : '80vh',
-        margin: '1rem auto',
-      });
-    }
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
@@ -160,33 +137,10 @@ function Multiplayer() {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="p-4 overflow-hidden max-w-screen-lg w-full">
-        <div className="flex justify-center" style={boardWrapperStyle}>
-        <Chessboard
-        id="MultiplayerChessboard"
-        position={game.fen()}
-        boardOrientation={boardOrientation}
-        onPieceDrop={onDrop}
-        draggable={{
-          enabled: currentUserPiece !== null,
-          dropOffBoard: 'trash',
-          showGhost: true,
-        }}
-      />
-
-        </div>
-      
+      <ChessBoard game={game} boardOrientation={boardOrientation} onDrop={onDrop} />
 
       {isGameOverVisible && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 border-2 border-black shadow-lg z-50">
-          <p className="mb-4 text-2xl font-bold">Game Over!</p>
-          <p className="mb-4">Winner: {winner}</p>
-          <button
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            onClick={() => handleNewGame()}
-          >
-            New Game
-          </button>
-        </div>
+        <GameOverModal winner={winner} handleNewGame={handleNewGame} />
       )}
     </div>
     </div>
