@@ -19,17 +19,17 @@ const PieceSelection = ({ onSelect, onClose }) => {
   };
 
   return (
-    <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 ${boxStyles.base}`}>
-      <h2 className="text-2xl mb-4 text-center ">Select Your Piece </h2>
+    <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 lg:w-96 ${boxStyles.base}`}>
+      <h2 className="text-2xl lg:text-3xl mb-4 text-center ">Select Your Piece </h2>
       <div className="flex justify-center items-center space-x-4">
         <button
-          className={`p-4 rounded-md w-20 ${selectedPiece === 'white' ? 'bg-gray-700 text-white' : 'bg-teal-800'}`}
+          className={`p-4 rounded-md w-28 ${selectedPiece === 'white' ? 'bg-teal-900 text-white' : 'bg-teal-600'}`}
           onClick={() => handlePieceSelect('white')}
         >
           white
         </button>
         <button
-          className={`p-4 rounded-md w-20 ${selectedPiece === 'black' ? 'bg-gray-700 text-white' : 'bg-teal-800'}`}
+          className={`p-4 rounded-md w-28 ${selectedPiece === 'black' ? 'bg-teal-900 text-white' : 'bg-teal-600'}`}
           onClick={() => handlePieceSelect('black')}
         >
           Black
@@ -37,13 +37,13 @@ const PieceSelection = ({ onSelect, onClose }) => {
       </div>
       <div className="flex justify-center  m-6">
         <button
-          className="mr-6 border-white bg-lime-500 p-2 rounded-md hover:bg-lime-600 focus:outline-none focus:ring focus:border-red-300"
+          className="mr-6 w-14 border-white bg-lime-500 p-2 rounded-md hover:bg-lime-600 focus:outline-none focus:ring focus:border-red-300"
           onClick={handleConfirm}
         >
           ✔
         </button>
         <button
-          className=" bg-red-500 text-white p-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300 pl-3 pr-3"
+          className="w-14 bg-red-500 text-white p-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300 pl-3 pr-3"
           onClick={onClose}
         >
           ✘

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import PieceSelection from '../component/PieceSelection';
 import chessPng from '../assets/chessPng.png';
-import "../App.css"
+import '../App.css';
 
 function Homepage() {
   const navigate = useNavigate();
@@ -13,7 +13,8 @@ function Homepage() {
   const [gameId, setGameId] = useState(null);
 
   const buttonStyles = {
-    base: 'border-2 border-solid border-white border-opacity-25 rounded-xl font-bold m-2 p-3 hover:bg-opacity-20 bg-white bg-opacity-10 shadow-box h-35 w-60 text-white text-center',
+    base: 'border-2 border-solid border-white border-opacity-25 rounded-xl font-bold m-2 p-3 hover:bg-opacity-20 bg-white bg-opacity-10 shadow-box text-white text-center',
+    larger: 'h-16 w-72 text-xl', // Adjusted size for laptop screens
   };
 
   async function startOnlineGame(startingPiece) {
@@ -62,17 +63,19 @@ function Homepage() {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen">
-      <img className='h-40 w-40 mb-20' src={chessPng} alt="chess" />
-      <button className={buttonStyles.base} onClick={() => handlePlayClick('playLocally')}>
+      <img className='h-40 w-40 mb-20 lg:h-56 lg:w-56' src={chessPng} alt="chess" />
+
+      {/* Adjusted button size for laptop screens */}
+      <button className={`${buttonStyles.base} ${buttonStyles.larger}`} onClick={() => handlePlayClick('playLocally')}>
         Play Locally
       </button>
-      <button className={buttonStyles.base} onClick={() => handlePlayClick('HumanVsComputer')}>
+      <button className={`${buttonStyles.base} ${buttonStyles.larger}`} onClick={() => handlePlayClick('HumanVsComputer')}>
         Human vs Computer
       </button>
-      <button className={buttonStyles.base} onClick={() => handlePlayClick('HumanVsRandom')}>
+      <button className={`${buttonStyles.base} ${buttonStyles.larger}`} onClick={() => handlePlayClick('HumanVsRandom')}>
         User vs Random
       </button>
-      <button className={buttonStyles.base} onClick={() => handlePlayClick('Multiplayer')}>
+      <button className={`${buttonStyles.base} ${buttonStyles.larger}`} onClick={() => handlePlayClick('Multiplayer')}>
         Multiplayer
       </button>
 
@@ -87,4 +90,3 @@ function Homepage() {
 }
 
 export default Homepage;
-
