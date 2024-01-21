@@ -12,7 +12,14 @@ function Multiplayer() {
   const [currentUserPiece, setCurrentUserPiece] = useState(null);
   const [winner, setWinner] = useState(null);
   const [isGameOverVisible, setIsGameOverVisible] = useState(false);
+  const [isSharePopupOpen, setIsSharePopupOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const [isCopied, setIsCopied] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
 
+  const boxStyles = {
+    base: 'border-2 border-solid border-white border-opacity-25 rounded-xl font-bold m-2 p-3 hover:bg-opacity-80 bg-slate-900 bg-opacity-80 shadow-box h-35 w-80 text-white text-center',
+  };
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
@@ -52,6 +59,8 @@ function Multiplayer() {
             const orientation = currentMember?.piece === 'white' ? 'white' : 'black';
             setBoardOrientation(orientation);
           }
+
+          setIsCreator(currentMember?.creator || false);
         }
       };
 
@@ -78,6 +87,10 @@ function Multiplayer() {
       unsubscribeGame();
     };
   }, [gameId, currentUserPiece, boardOrientation]);
+
+  useEffect(() => {
+    handleToggleSharePopup();
+  }, []);
 
   function onDrop(source, target, piece) {
     const move = game.move({ from: source, to: target, promotion: piece[1].toLowerCase() ?? 'q' });
@@ -134,15 +147,60 @@ function Multiplayer() {
       .catch((error) => console.error('Error updating game data:', error));
   }
 
+  function handleToggleSharePopup() {
+    if (isSharePopupOpen) {
+      setIsSharePopupOpen(false);
+      setShareUrl('');
+      setIsCopied(false);
+    } else {
+      const currentUrl = window.location.href;
+      setShareUrl(currentUrl);
+      setIsSharePopupOpen(true);
+    }
+  }
+
+  function handleCopyUrl() {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 3000);
+    });
+  }
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="p-4 overflow-hidden max-w-screen-lg w-full">
-      <ChessBoard game={game} boardOrientation={boardOrientation} onDrop={onDrop} />
+        <ChessBoard game={game} boardOrientation={boardOrientation} onDrop={onDrop} />
 
-      {isGameOverVisible && (
-        <GameOverModal winner={winner} handleNewGame={handleNewGame} />
-      )}
-    </div>
+        {isCreator && (
+          <div>
+              {isSharePopupOpen && (
+                <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${boxStyles.base}`}>
+                  <p>Share Link:</p>
+                  <input
+                    type="text"
+                    value={shareUrl}
+                    readOnly
+                    className="w-full p-2 mt-1 border rounded text-black"
+                  />
+                  <div className="flex justify-evenly mt-2">
+                    <button onClick={handleCopyUrl} className="bg-lime-500 text-white py-1 px-2 rounded">
+                      {isCopied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <button onClick={handleToggleSharePopup} className="bg-lime-500 text-white py-1 px-2 rounded">
+                      Close
+                    </button>
+                  </div>
+                </div>
+            )}
+          </div>
+        )}
+
+        {isGameOverVisible && (
+          <GameOverModal winner={winner} handleNewGame={handleNewGame} />
+        )}
+      </div>
     </div>
   );
 }
