@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import PieceSelection from '../component/PieceSelection';
+import chessPng from '../assets/chessPng.png';
 import "../App.css"
 
 function Homepage() {
@@ -61,7 +62,7 @@ function Homepage() {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen">
-      <img className='h-40 w-40 mb-20' src="src/assets/chessPng.png" alt="chess" />
+      <img className='h-40 w-40 mb-20' src={chessPng} alt="chess" />
       <button className={buttonStyles.base} onClick={() => handlePlayClick('playLocally')}>
         Play Locally
       </button>
