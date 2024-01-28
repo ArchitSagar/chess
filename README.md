@@ -1,8 +1,8 @@
-# Elite Chess
+# **Elite Chess**
 
-Welcome to Elite Chess, your premier Chess Game Website! This project offers a diverse range of gameplay modes, providing a thrilling chess experience for players of all levels. Built using React.js, chess.js, and react-chessboard, Elite Chess delivers an immersive and enjoyable platform for chess enthusiasts.
+**Welcome to Elite Chess, your premier Chess Game Website!** This project offers a diverse range of gameplay modes, providing a thrilling chess experience for players of all levels. Built using React.js, chess.js, and react-chessboard, Elite Chess delivers an immersive and enjoyable platform for chess enthusiasts.
 
-## Features
+## **Features**
 
 - **Local Gameplay:** Enjoy a classic game of chess with a friend locally, taking turns on the same device.
 
@@ -12,7 +12,7 @@ Welcome to Elite Chess, your premier Chess Game Website! This project offers a d
 
 - **Multiplayer:** Engage in real-time multiplayer matches against friends or opponents. The multiplayer functionality is powered by Firebase, ensuring a seamless and reliable gaming experience.
 
-## Technologies Used
+## **Technologies Used**
 
 - **React.js:** The frontend of the website is built using React.js, offering a dynamic and responsive user interface.
 
@@ -31,17 +31,18 @@ Welcome to Elite Chess, your premier Chess Game Website! This project offers a d
    git clone https://github.com/ArchitSagar/chess.git
    
 
-Install dependencies:
+2. Install dependencies:
 
-    cd elite-chess
+    ```bash
+    cd chess
     npm install
 
-Start
+3. Start
 
+    ```bash
     npm run dev
     
-
-Open your browser and navigate to http://localhost:3000 to access the Elite Chess Game Website.
+4. Open your browser and navigate to http://localhost:3000 to access the Elite Chess Game Website.
 
 ### Configuration
 For the multiplayer feature, you'll need to set up Firebase credentials. Follow these steps:
