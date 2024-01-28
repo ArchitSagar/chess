@@ -1,6 +1,6 @@
 # **Elite Chess**
 
-**Welcome to Elite Chess, your premier Chess Game Website!** This project offers a diverse range of gameplay modes, providing a thrilling chess experience for players of all levels. Built using React.js, chess.js, and react-chessboard, Elite Chess delivers an immersive and enjoyable platform for chess enthusiasts.
+**Welcome to Elite Chess, a go-to Chess Game platform!** With a variety of gameplay modes, this project ensures a thrilling chess experience for players of all levels. Built using React.js, chess.js, and react-chessboard, Elite Chess offers a clean and immersive platform for chess enthusiasts.
 
 ## **Features**
 
@@ -24,51 +24,3 @@
 
 - **Firebase:** The backend of the multiplayer feature is managed by Firebase, offering real-time database functionality to enable seamless and enjoyable multiplayer gameplay.
 
-## Getting Started
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ArchitSagar/chess.git
-   
-
-2. Install dependencies:
-
-    ```bash
-    cd chess
-    npm install
-
-3. Start
-
-    ```bash
-    npm run dev
-    
-4. Open your browser and navigate to http://localhost:3000 to access the Elite Chess Game Website.
-
-### Configuration
-For the multiplayer feature, you'll need to set up Firebase credentials. Follow these steps:
-
-1. Create a Firebase project at Firebase Console.
-2. Obtain your Firebase configuration (apiKey, authDomain, projectId, etc.).
-3. Replace the placeholder values in the src/firebase/firebaseConfig.js file with your Firebase configuration.
-
-```javascript
-
-// src/firebase/firebaseConfig.js
-
-const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_AUTH_DOMAIN",
-projectId: "YOUR_PROJECT_ID",
-// ...other config values
-};
-
-export default firebaseConfig;
-```
-
-### Contributing
-Feel free to contribute to the project by opening issues or submitting pull requests. Your feedback and contributions are highly appreciated!
-
-### License
-This project is licensed under the MIT License. Feel free to use, modify, and distribute the code for your own purposes.
-
-Happy gaming! 🌟
